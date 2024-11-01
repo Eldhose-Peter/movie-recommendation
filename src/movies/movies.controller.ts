@@ -19,6 +19,7 @@ class MovieController extends Controller {
       validationMiddleware(averageSchema),
       this.getAverageRatings
     );
+    this.router.get(`${this.path}/similar`, this.getSimilarRatings);
   }
 
   private getMovies = async (request: Request, response: Response, next: NextFunction) => {
@@ -35,6 +36,15 @@ class MovieController extends Controller {
       const result = await this.movieService.getAverageRatingsOfMovies(
         request.query.minimalRatings as string
       );
+      response.json({ movies: result });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private getSimilarRatings = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await this.movieService.getSimilarRatings(5, 1, 1);
       response.json({ movies: result });
     } catch (err) {
       next(err);
