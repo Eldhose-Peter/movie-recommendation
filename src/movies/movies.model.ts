@@ -1,5 +1,4 @@
 export interface Movie {
-    rows: any;
     id: number; 
     title: string;        
     year?: number;       
