@@ -38,7 +38,7 @@ A Web app which calculates movie recommendations based on user similarity. It us
 - Leveraging Similar User Ratings: Once similar users are identified, their ratings are used to recommend movies that the current user has not rated yet. The weighting by similarity score ensures that ratings from users who are more similar to the current user have a greater influence on the recommendations.
 
 *Weighted Average Calculation*
-- If a user has rated the movie, compute the weighted rating as the product of the user's similarity score and their rating.
+- If a user has rated the movie, compute the weighted rating as the product of the other user's similarity score and their rating.
 
 
 
