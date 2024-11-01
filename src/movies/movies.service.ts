@@ -1,3 +1,4 @@
+import { MovieFilters } from "common/types";
 import { Similarity } from "./classes/similarity";
 import { Movie, RatedMovie, Rating } from "./movies.model";
 import { MovieRepository } from "./movies.repository";
@@ -7,8 +8,8 @@ export class MovieService {
   private movieRepository = new MovieRepository();
   private ratingRepository = new RatingRepository();
 
-  public async getAll() {
-    return this.movieRepository.getAllMovies();
+  public async getMoviesByFilter(filters: MovieFilters) {
+    return this.movieRepository.getMoviesByFilter(filters);
   }
 
   //gets the average rating for a movieId
@@ -26,12 +27,12 @@ export class MovieService {
     return 0;
   }
 
-  public async getAverageRatingsOfMovies(minimalRatings: string) {
-    const movies: Movie[] = await this.movieRepository.getAllMovies();
+  public async getAverageRatingsOfMovies(minimalRatings: number, filters: MovieFilters) {
+    const movies: Movie[] = await this.movieRepository.getMoviesByFilter(filters);
 
     const ratedMovies = await Promise.all(
       movies.map(async (movie) => {
-        const avgRating = await this.getAverageForMovie(movie.id, parseInt(minimalRatings));
+        const avgRating = await this.getAverageForMovie(movie.id, minimalRatings);
         return avgRating > 0.0 ? { ...movie, rating: avgRating } : null;
       })
     );
@@ -120,10 +121,11 @@ export class MovieService {
   public async getSimilarRatings(
     curRaterId: number,
     numSimilarRaters: number,
-    minimalRaters: number
+    minimalRaters: number,
+    filters: MovieFilters
   ): Promise<Similarity[]> {
     const similarRaters: Similarity[] = await this.getSimilarities(curRaterId);
-    const movies: Movie[] = await this.movieRepository.getAllMovies();
+    const movies: Movie[] = await this.movieRepository.getMoviesByFilter(filters);
     const movieIDList = movies.map((movie) => movie.id);
 
     const similarMovies: Similarity[] = [];
