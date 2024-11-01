@@ -1,5 +1,6 @@
 import pool from "config/database";
-import { Rating } from "./ratings.model";
+import { Rating } from "./movies.model";
+
 
 export class RatingRepository {
   public async getAllRatings() {
