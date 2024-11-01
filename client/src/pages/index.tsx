@@ -21,7 +21,9 @@ export default function Page() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/v1/movies/all");
+        const response = await fetch(
+          "http://localhost:3000/api/v1/movies/average?minimalRatings=50"
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
