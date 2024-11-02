@@ -58,7 +58,10 @@ export default function Navbar() {
     <nav className="py-4 px-6 text-sm font-medium bg-slate-800 flex justify-between items-center">
       <ul className="flex space-x-3">
         <NavItem href="/" isActive={router.pathname === "/"}>
-          Home
+          Movies
+        </NavItem>
+        <NavItem href="/newRatings" isActive={router.pathname === "/newRatings"}>
+          Rate Movies
         </NavItem>
         <NavItem href="/about" isActive={router.pathname === "/about"}>
           About
