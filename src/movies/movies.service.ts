@@ -148,4 +148,8 @@ export class MovieService {
     similarMovies.sort(Similarity.compareTo);
     return similarMovies;
   }
+
+  public async addratingForMovie(rater_id: number, movie_id: number, rating: number) {
+    await this.ratingRepository.addRatingForMovie(rater_id, movie_id, rating);
+  }
 }

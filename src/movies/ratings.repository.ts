@@ -41,4 +41,23 @@ export class RatingRepository {
     );
     return result.rows;
   }
+
+  public async addRatingForMovie(rater_id: number, movie_id: number, rating: number) {
+    const time = Math.floor(Date.now() / 1000);
+
+    try {
+      await pool.query(
+        `INSERT INTO ratings (rater_id, movie_id, rating, time)
+      VALUES ($1, $2, $3, $4)
+      ON CONFLICT (rater_id, movie_id) 
+      DO UPDATE SET 
+        rating = EXCLUDED.rating,
+        time = EXCLUDED.time;
+    `,
+        [rater_id, movie_id, rating, time]
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

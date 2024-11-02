@@ -3,6 +3,7 @@ import { Controller } from "interfaces/controller.interface";
 import { MovieService } from "./movies.service";
 import validationMiddleware from "middleware/validation.middleware";
 import { averageSchema, filterSchema, similaritySchema } from "./movie.validation";
+import authMiddleware from "middleware/auth.middleware";
 
 class MovieController extends Controller {
   private movieService = new MovieService();
@@ -24,6 +25,7 @@ class MovieController extends Controller {
       validationMiddleware(similaritySchema),
       this.getSimilarRatings
     );
+    this.router.post(`${this.path}/rate/:id`, authMiddleware, this.rateMovie);
   }
 
   private getMovies = async (request: Request, response: Response, next: NextFunction) => {
@@ -90,6 +92,21 @@ class MovieController extends Controller {
       response.json({ movies: result });
     } catch (err) {
       next(err);
+    }
+  };
+
+  private rateMovie = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      if (request.userId) {
+        const userId = request.userId;
+        const movieid = parseInt(request.params.id);
+        const rating = request.body.rating;
+
+        await this.movieService.addratingForMovie(userId, movieid, rating);
+        response.status(200);
+      }
+    } catch (error) {
+      next(error);
     }
   };
 }
