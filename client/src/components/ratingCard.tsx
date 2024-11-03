@@ -26,7 +26,7 @@ export function RatingCard({ movie, rating, onRate, isSubmitted }: MovieCardProp
       </p>
       <p>Directed by: {movie.director}</p>
       <div className="flex space-x-1 mt-2">
-        {[...Array(5)].map((_, index) => (
+        {[...Array(10)].map((_, index) => (
           <FaStar
             key={index}
             className={`cursor-pointer ${rating > index ? "text-yellow-400" : "text-gray-300"}`}

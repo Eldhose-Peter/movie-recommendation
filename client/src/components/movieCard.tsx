@@ -17,10 +17,10 @@ interface MovieCardProps {
   movie: Movie;
 }
 
-// Function to generate star rating display
+// Function to generate star rating display for a 0-10 rating scale
 const renderStars = (rating: number) => {
-  const filledStars = Math.round(rating / 2);
-  const totalStars = 5;
+  const filledStars = Math.round(rating); // Convert rating directly to stars for a 0-10 scale
+  const totalStars = 10;
   const stars = [];
 
   for (let i = 0; i < totalStars; i++) {
@@ -57,9 +57,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         <div className="flex items-center mt-2">
           {movie.rating !== undefined && (
             <>
-              <span className="text-sm text-gray-700 mr-2">{movie.rating.toFixed(1)} / 10</span>{" "}
-              {/* Display rating */}
-              {renderStars(movie.rating)} {/* Render stars */}
+              <span className="text-sm text-gray-700 mr-2">{movie.rating.toFixed(1)} / 10</span>
+              {renderStars(movie.rating)}
             </>
           )}
         </div>
