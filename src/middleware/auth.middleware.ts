@@ -6,7 +6,6 @@ import { env } from "config/env";
 
 async function authMiddleware(request: Request, _: Response, next: NextFunction) {
   const token = request.cookies.Authentication;
-  console.log(token);
   if (!token) return next(new UnauthorizedError());
 
   const decoded = jwt.verify(token, env.JWT_SECRET) as { _id: number };
