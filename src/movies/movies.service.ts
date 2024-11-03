@@ -118,7 +118,7 @@ export class MovieService {
   // Gets recommended movies from raters with similar ratings
   // It uses collaborative filtering, specifically a dot product for rating comparison,
   // to determine the closeness between raters and recommend movies that similar users have rated highly.
-  public async getSimilarRatings(
+  private async getSimilarRatings(
     curRaterId: number,
     numSimilarRaters: number,
     minimalRaters: number,
@@ -147,6 +147,25 @@ export class MovieService {
 
     similarMovies.sort(Similarity.compareTo);
     return similarMovies;
+  }
+
+  public async getSuggestedMovies(
+    curRaterId: number,
+    numSimilarRaters: number,
+    minimalRaters: number,
+    filters: MovieFilters
+  ) {
+    const similarMovies: Similarity[] = await this.getSimilarRatings(
+      curRaterId,
+      numSimilarRaters,
+      minimalRaters,
+      filters
+    );
+
+    const movieIdsWithRatings: number[] = similarMovies.map((item) => item.item);
+    const movies: Movie[] = await this.movieRepository.getMoviesById(movieIdsWithRatings);
+
+    return movies;
   }
 
   public async addratingForMovie(rater_id: number, movie_id: number, rating: number) {

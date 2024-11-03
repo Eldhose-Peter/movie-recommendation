@@ -22,6 +22,7 @@ class MovieController extends Controller {
     );
     this.router.get(
       `${this.path}/similar`,
+      authMiddleware,
       validationMiddleware(similaritySchema),
       this.getSimilarRatings
     );
@@ -72,25 +73,27 @@ class MovieController extends Controller {
 
   private getSimilarRatings = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const userId = 5;
+      if (request.userId) {
+        const userId = request.userId;
 
-      const { director, genre, minutes, yearAfter } = request.query;
+        const { director, genre, minutes, yearAfter } = request.query;
 
-      // Convert numeric query parameters to appropriate types
-      const filters = {
-        director: director ? String(director) : undefined,
-        genre: genre ? String(genre) : undefined,
-        minutes: minutes ? Number(minutes) : undefined,
-        yearAfter: yearAfter ? Number(yearAfter) : undefined
-      };
+        // Convert numeric query parameters to appropriate types
+        const filters = {
+          director: director ? String(director) : undefined,
+          genre: genre ? String(genre) : undefined,
+          minutes: minutes ? Number(minutes) : undefined,
+          yearAfter: yearAfter ? Number(yearAfter) : undefined
+        };
 
-      const result = await this.movieService.getSimilarRatings(
-        userId,
-        parseInt(request.query.numSimilarRaters as string),
-        parseInt(request.query.minimalRatings as string),
-        filters
-      );
-      response.json({ movies: result });
+        const result = await this.movieService.getSuggestedMovies(
+          userId,
+          parseInt(request.query.numSimilarRaters as string),
+          parseInt(request.query.minimalRatings as string),
+          filters
+        );
+        response.json({ movies: result });
+      }
     } catch (err) {
       next(err);
     }
