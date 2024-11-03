@@ -152,4 +152,22 @@ export class MovieService {
   public async addratingForMovie(rater_id: number, movie_id: number, rating: number) {
     await this.ratingRepository.addRatingForMovie(rater_id, movie_id, rating);
   }
+
+  public async getMoviesRatedByUser(rater_id: number) {
+    const ratings: Rating[] = await this.ratingRepository.getRatingsByUser(rater_id);
+    const ratingMap = new Map<number, number>();
+    ratings.forEach((rating) => {
+      ratingMap.set(rating.movie_id, rating.rating);
+    });
+
+    const movieIdsWithRatings = Array.from(ratingMap.keys());
+
+    const movies: Movie[] = await this.movieRepository.getMoviesById(movieIdsWithRatings);
+    const ratedMovies: RatedMovie[] = movies.map((movie) => ({
+      ...movie,
+      rating: ratingMap.get(movie.id) ?? 0
+    }));
+
+    return ratedMovies;
+  }
 }

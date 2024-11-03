@@ -33,7 +33,7 @@ CSV HEADER;
 -- Create the ratings table
 CREATE TABLE ratings (
     rater_id INT,
-    movie_id VARCHAR(20),
+    movie_id INT,
     rating INT NOT NULL,
     time TEXT,
     PRIMARY KEY (rater_id, movie_id)

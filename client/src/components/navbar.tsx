@@ -63,6 +63,9 @@ export default function Navbar() {
         <NavItem href="/newRatings" isActive={router.pathname === "/newRatings"}>
           Rate Movies
         </NavItem>
+        <NavItem href="/rated" isActive={router.pathname === "/rated"}>
+          My Ratings
+        </NavItem>
         <NavItem href="/about" isActive={router.pathname === "/about"}>
           About
         </NavItem>

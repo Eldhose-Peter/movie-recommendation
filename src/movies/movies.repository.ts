@@ -51,4 +51,10 @@ export class MovieRepository {
     const result = await pool.query<Movie>(query, params);
     return result.rows;
   }
+
+  public async getMoviesById(movie_ids: number[]) {
+    const query = "SELECT * FROM movies WHERE id = ANY($1)";
+    const result = await pool.query<Movie>(query, [movie_ids]);
+    return result.rows;
+  }
 }

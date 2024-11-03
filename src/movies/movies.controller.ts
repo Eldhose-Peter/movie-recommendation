@@ -26,6 +26,7 @@ class MovieController extends Controller {
       this.getSimilarRatings
     );
     this.router.post(`${this.path}/rate/:id`, authMiddleware, this.rateMovie);
+    this.router.get(`${this.path}/rated`, authMiddleware, this.getUserRatedMovies);
   }
 
   private getMovies = async (request: Request, response: Response, next: NextFunction) => {
@@ -107,6 +108,19 @@ class MovieController extends Controller {
       }
     } catch (error) {
       next(error);
+    }
+  };
+
+  private getUserRatedMovies = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      if (request.userId) {
+        const userId = request.userId;
+
+        const result = await this.movieService.getMoviesRatedByUser(userId);
+        response.json({ movies: result });
+      }
+    } catch (err) {
+      next(err);
     }
   };
 }
