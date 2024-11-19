@@ -45,6 +45,7 @@ A Web app which calculates movie recommendations based on user similarity. It us
 ## Starting project
 
 Building backend Node Application
+- extract data-set.zip file in db-init
 - `npm install`
 - `npm run prestart`
 - `npm run build`
