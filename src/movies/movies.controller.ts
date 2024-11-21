@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Controller } from "interfaces/controller.interface";
 import { MovieService } from "./movies.service";
 import validationMiddleware from "middleware/validation.middleware";
-import { averageSchema, filterSchema, similaritySchema } from "./movie.validation";
+import { filterSchema, similaritySchema } from "./movie.validation";
 import authMiddleware from "middleware/auth.middleware";
 
 class MovieController extends Controller {
@@ -17,7 +17,7 @@ class MovieController extends Controller {
     this.router.get(`${this.path}/all`, validationMiddleware(filterSchema), this.getMovies);
     this.router.get(
       `${this.path}/average`,
-      validationMiddleware(averageSchema),
+      validationMiddleware(filterSchema),
       this.getAverageRatings
     );
     this.router.get(
@@ -32,12 +32,13 @@ class MovieController extends Controller {
 
   private getMovies = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { genre, yearAfter } = request.query;
+      const { genre, yearAfter, minimalVoters } = request.query;
 
       // Convert numeric query parameters to appropriate types
       const filters = {
         genre: genre ? Number(genre) : undefined,
-        yearAfter: yearAfter ? Number(yearAfter) : undefined
+        yearAfter: yearAfter ? Number(yearAfter) : undefined,
+        minimalVoters: minimalVoters ? Number(minimalVoters) : undefined
       };
 
       const result = await this.movieService.getMoviesByFilter(filters);
@@ -49,18 +50,16 @@ class MovieController extends Controller {
 
   private getAverageRatings = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { genre, yearAfter } = request.query;
+      const { genre, yearAfter, minimalVoters } = request.query;
 
       // Convert numeric query parameters to appropriate types
       const filters = {
         genre: genre ? Number(genre) : undefined,
-        yearAfter: yearAfter ? Number(yearAfter) : undefined
+        yearAfter: yearAfter ? Number(yearAfter) : undefined,
+        minimalVoters: minimalVoters ? Number(minimalVoters) : undefined
       };
 
-      const result = await this.movieService.getAverageRatingsOfMovies(
-        parseInt(request.query.minimalRatings as string),
-        filters
-      );
+      const result = await this.movieService.getAverageRatingsOfMovies(filters);
       response.json({ movies: result });
     } catch (err) {
       next(err);
@@ -72,18 +71,19 @@ class MovieController extends Controller {
       if (request.userId) {
         const userId = request.userId;
 
-        const { genre, yearAfter } = request.query;
+        const { genre, yearAfter, minimalVoters, numSimilarRaters } = request.query;
 
         // Convert numeric query parameters to appropriate types
         const filters = {
           genre: genre ? Number(genre) : undefined,
           yearAfter: yearAfter ? Number(yearAfter) : undefined
+          //minimalVoters: minimalVoters ? Number(minimalVoters) : undefined
         };
 
         const result = await this.movieService.getSuggestedMovies(
           userId,
-          parseInt(request.query.numSimilarRaters as string),
-          parseInt(request.query.minimalRatings as string),
+          parseInt(numSimilarRaters as string),
+          parseInt(minimalVoters as string),
           filters
         );
         response.json({ movies: result });

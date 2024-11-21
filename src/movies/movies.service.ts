@@ -27,18 +27,11 @@ export class MovieService {
     return 0;
   }
 
-  public async getAverageRatingsOfMovies(minimalRatings: number, filters: MovieFilters) {
+  public async getAverageRatingsOfMovies(filters: MovieFilters) {
     const movies: Movie[] = await this.movieRepository.getMoviesByFilter(filters);
 
-    const ratedMovies = await Promise.all(
-      movies.map(async (movie) => {
-        const avgRating = await this.getAverageForMovie(movie.id, minimalRatings);
-        return avgRating > 0.0 ? { ...movie, rating: avgRating } : null;
-      })
-    );
-
     // Filter out any null values (movies that didn't meet the rating criteria)
-    return ratedMovies.filter((movie): movie is RatedMovie => movie !== null);
+    return movies;
   }
 
   private async dotProduct(curRater: number, otherRater: number) {

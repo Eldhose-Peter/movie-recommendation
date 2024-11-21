@@ -9,26 +9,18 @@ export const filterSchema = z.object({
     yearAfter: z
       .string()
       .optional()
+      .transform((val) => Number(val)),
+    minimalVoters: z
+      .string()
+      .optional()
       .transform((val) => Number(val))
   })
-});
-
-// Define the average schema by merging the filter schema
-export const averageSchema = filterSchema.extend({
-  query: filterSchema.shape.query.merge(
-    z.object({
-      minimalRatings: z.string()
-    })
-  )
 });
 
 export const similaritySchema = filterSchema.extend({
   query: filterSchema.shape.query.merge(
     z.object({
-      minimalRatings: z.string(),
       numSimilarRaters: z.string()
     })
   )
 });
-
-export type AveragePayload = z.infer<typeof averageSchema>["query"];

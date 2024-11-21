@@ -3,7 +3,9 @@ import { Movie } from "./movies.model";
 import { MovieFilters } from "common/types";
 
 export class MovieRepository {
-  public async getMoviesByFilter({ genre, yearAfter }: MovieFilters = {}): Promise<Movie[]> {
+  public async getMoviesByFilter({ genre, yearAfter, minimalVoters }: MovieFilters = {}): Promise<
+    Movie[]
+  > {
     // Base SQL query
     let query = "SELECT m.* FROM movies m JOIN movie_genres mg ON m.id = mg.movie_id";
     const params: (string | number)[] = [];
@@ -25,10 +27,19 @@ export class MovieRepository {
       paramIndex++;
     }
 
+    if (minimalVoters) {
+      conditions.push(`m.vote_count > $${paramIndex}`);
+      params.push(minimalVoters);
+      paramIndex++;
+    }
+
     // Append conditions to the query if there are any
     if (conditions.length > 0) {
       query += " WHERE " + conditions.join(" AND ");
     }
+
+    // Add sorting by average rating
+    query += " ORDER BY m.vote_average DESC";
 
     // Execute the query with parameters
     const result = await pool.query<Movie>(query, params);
