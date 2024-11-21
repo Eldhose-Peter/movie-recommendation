@@ -2,9 +2,7 @@ import { z } from "zod";
 
 export const filterSchema = z.object({
   query: z.object({
-    director: z.string().optional(),
-    genre: z.string().optional(),
-    minutes: z
+    genre: z
       .string()
       .optional()
       .transform((val) => Number(val)),

@@ -1,6 +1,4 @@
 export type MovieFilters = {
-  director?: string;
-  genre?: string;
-  minutes?: number;
+  genre?: number;
   yearAfter?: number;
 };

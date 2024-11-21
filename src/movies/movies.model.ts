@@ -1,12 +1,17 @@
 export interface Movie {
   id: number;
   title: string;
-  year?: number;
-  country?: string;
-  genre?: string;
-  director?: string;
-  minutes?: number;
-  poster?: string;
+  original_title: string;
+  release_date: string;
+  overview: string;
+  popularity: number;
+  vote_count: number;
+  vote_average: number;
+  original_language: string;
+  backdrop_path: string;
+  poster_path: string;
+  adult: boolean;
+  video: boolean;
 }
 
 export interface Rating {

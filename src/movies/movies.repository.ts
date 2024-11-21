@@ -3,14 +3,9 @@ import { Movie } from "./movies.model";
 import { MovieFilters } from "common/types";
 
 export class MovieRepository {
-  public async getMoviesByFilter({
-    director,
-    genre,
-    minutes,
-    yearAfter
-  }: MovieFilters = {}): Promise<Movie[]> {
+  public async getMoviesByFilter({ genre, yearAfter }: MovieFilters = {}): Promise<Movie[]> {
     // Base SQL query
-    let query = "SELECT * FROM movies";
+    let query = "SELECT m.* FROM movies m JOIN movie_genres mg ON m.id = mg.movie_id";
     const params: (string | number)[] = [];
     const conditions: string[] = [];
 
@@ -18,26 +13,14 @@ export class MovieRepository {
     let paramIndex = 1;
 
     // Add filters based on provided parameters
-    if (director) {
-      conditions.push(`director ILIKE $${paramIndex}`);
-      params.push(`%${director}%`);
-      paramIndex++;
-    }
-
     if (genre) {
-      conditions.push(`genre ILIKE $${paramIndex}`);
-      params.push(`%${genre}%`);
-      paramIndex++;
-    }
-
-    if (minutes !== undefined) {
-      conditions.push(`minutes = $${paramIndex}`);
-      params.push(minutes);
+      conditions.push(`mg.genre_id = $${paramIndex}`);
+      params.push(genre);
       paramIndex++;
     }
 
     if (yearAfter !== undefined) {
-      conditions.push(`year > $${paramIndex}`);
+      conditions.push(`EXTRACT(YEAR FROM m.release_date::timestamp) > $${paramIndex}`);
       params.push(yearAfter);
       paramIndex++;
     }

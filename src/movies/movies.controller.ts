@@ -32,13 +32,11 @@ class MovieController extends Controller {
 
   private getMovies = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { director, genre, minutes, yearAfter } = request.query;
+      const { genre, yearAfter } = request.query;
 
       // Convert numeric query parameters to appropriate types
       const filters = {
-        director: director ? String(director) : undefined,
-        genre: genre ? String(genre) : undefined,
-        minutes: minutes ? Number(minutes) : undefined,
+        genre: genre ? Number(genre) : undefined,
         yearAfter: yearAfter ? Number(yearAfter) : undefined
       };
 
@@ -51,13 +49,11 @@ class MovieController extends Controller {
 
   private getAverageRatings = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { director, genre, minutes, yearAfter } = request.query;
+      const { genre, yearAfter } = request.query;
 
       // Convert numeric query parameters to appropriate types
       const filters = {
-        director: director ? String(director) : undefined,
-        genre: genre ? String(genre) : undefined,
-        minutes: minutes ? Number(minutes) : undefined,
+        genre: genre ? Number(genre) : undefined,
         yearAfter: yearAfter ? Number(yearAfter) : undefined
       };
 
@@ -76,13 +72,11 @@ class MovieController extends Controller {
       if (request.userId) {
         const userId = request.userId;
 
-        const { director, genre, minutes, yearAfter } = request.query;
+        const { genre, yearAfter } = request.query;
 
         // Convert numeric query parameters to appropriate types
         const filters = {
-          director: director ? String(director) : undefined,
-          genre: genre ? String(genre) : undefined,
-          minutes: minutes ? Number(minutes) : undefined,
+          genre: genre ? Number(genre) : undefined,
           yearAfter: yearAfter ? Number(yearAfter) : undefined
         };
 
